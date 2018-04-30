@@ -7,5 +7,8 @@ public class Main
         Graph graph = new Graph(args[0]);
         System.out.println(graph);
 
+        PrimTree prim = new PrimTree(graph);
+        System.out.println(prim);
+
     }
 }
