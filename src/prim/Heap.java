@@ -1,52 +1,74 @@
 package prim;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 // Minimum Heap
 public class Heap<E extends Comparable<E>>
 {
-    private ArrayList<E> pq;
-    private int size;
+    private int n;
+    private int[] pq;
+    private int[] hPos;
+    private ArrayList<E> keys;
 
-    public Heap()
+    public Heap(int maxN)
     {
-        this.pq = new ArrayList<E>();
-        this.size = 0;
+        n = 0;
+        pq = new int[maxN + 1];
+        hPos = new int[maxN + 1];
+        keys = new ArrayList<E>(maxN + 1);
+
+
+        for (int i = 0; i <= maxN; i++)
+            hPos[i] = -1;
     }
 
-    public void insert(E item)
+    public void insert(int i, E key)
     {
-        // inserts items at the bottom on the heap
-        pq.add(item);
-        
-        // gets the size of the arraylist n - 1
-        size = pq.size() - 1;
+        n++;
+        hPos[i] = n;
+        pq[n] = i;
+        keys.add(key);
 
-        // heapify arraylist
-        siftUp(size);
+        siftUp(n);
     }
 
-    public E remove()
+    public int remove()
     {
-        // retrieve the value from top of heap
-        E item = pq.get(0);
+        if (n == 0)
+            throw new NoSuchElementException();
 
-        // swap the top key with the bottom key
-        swap(0, size--);
+        int min = pq[1];
 
-        // heapify based on key 0
-        siftDown(0);
+        swap(1, n--);
 
-        // clear the loitering key, shrinks the heap by assigning null
-        pq.set(size + 1, null);
+        siftDown(1);
 
-        return item;
+        hPos[min] = -1;
+        keys.set(min, null);
+        pq[n + 1] = -1;
+
+        return min;
     }
 
-    public E peek()
+    public boolean isEmpty()
     {
-        return this.pq.get(0);
+        return n == 0;
     }
+
+    public boolean contains(int i)
+    {
+        return hPos[i] != -1;
+    }
+
+    public void decreaseKey(int i, E key)
+    {
+        keys.add(key);
+        siftUp(hPos[i]);
+    }
+   
+
+   
 
     private void siftUp(int key)
     {
@@ -59,11 +81,11 @@ public class Heap<E extends Comparable<E>>
 
     private void siftDown(int key)
     {
-        while (2 * key <= size) 
+        while (2 * key <= n) 
         {
             int j = 2 * key;
 
-            if (j < size && greater(j, j + 1))
+            if (j < n && greater(j, j + 1))
                 j++;
             if (!greater(key, j))
                 break;
@@ -75,41 +97,16 @@ public class Heap<E extends Comparable<E>>
 
     private boolean greater(int i, int j)
     {
-        return pq.get(i).compareTo(pq.get(j)) > 0;
+        return pq[i] > pq[j];
     }
 
     private void swap(int i, int j)
     {
-        E item = pq.get(i);
-        pq.set(i, pq.get(j));
-        pq.set(j, item);
-    }
-
-    public int getSize()
-    {
-        return this.pq.size();
-    }
-
-    public boolean isEmpty()
-    {
-        return this.size == 0;
-    }
-    
-    public String toString()
-    {
-        return this.toString();
-        // StringBuilder sb = new StringBuilder();
-        
-        // sb.append("[ ");
-        // for (int i = 0; i < pq.size(); i++)
-        // { 
-        //     if (i == pq.size() - 1)
-        //         sb.append(pq.get(i));
-        //     else
-        //         sb.append(pq.get(i) + ", ");
-        // }
-        // sb.append(" ]");
-        
-        // return sb.toString();
+        int temp = pq[i];
+        pq[i] = pq[j];
+        pq[j] = temp;
+        // E item = pq.get(i);
+        // pq.set(i, pq.get(j));
+        // pq.set(j, item);
     }
 }
