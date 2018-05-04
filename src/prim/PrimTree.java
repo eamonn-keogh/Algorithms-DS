@@ -3,59 +3,58 @@ package prim;
 public class PrimTree 
 {
     private Edge[] edgeTo;
-    private double[] distTo;
-    private boolean[] visited;
-    private Heap<Double> pq;
+    private int[] distTo;
+    private boolean[] marked;
+    private Heap<Integer> pq;
 
     public PrimTree(Graph g)
     {
-        this.edgeTo = new Edge[g.getV()];
-        this.distTo = new double[g.getV()];
-        this.visited = new boolean[g.getV()];
-        this.pq = new Heap<Double>(g.getV());
+        edgeTo = new Edge[g.getV()];
+        distTo = new int[g.getV()];
+        marked = new boolean[g.getV()];
+        pq = new Heap<Integer>(g.getV());
 
-        // Initialise distances to infinity for each vertex 
-        for (int i = 0; i < g.getV(); i++) 
-            distTo[i] = Double.POSITIVE_INFINITY;
-        
-        // Visit each node and add to mst
-        for (int i = 0; i < g.getV(); i++)
-        {
-            if (!visited[i])
+        for (int i = 0; i < g.getV(); i++) {
+            distTo[i] = Integer.MAX_VALUE;
+        }
+
+        for (int i = 0; i <g.getV(); i++) {
+            if (!marked[i])
                 prim(g, i);
         }
+
     }
 
-    private void prim(Graph g, int vertex)
+    private void prim(Graph g, int v)
     {
-        distTo[vertex] = 0.0f;
-
-        pq.insert(vertex, distTo[vertex]);
+        distTo[v] = 0;
+        pq.insert(v, distTo[v]);
 
         while (!pq.isEmpty())
         {
-            int u = pq.remove();
-            scan(g, u);
+            int m = pq.remove();
+            System.out.println(m);
+            scan(g, m); 
         }
     }
 
-    private void scan(Graph g, int u)
+    private void scan(Graph g, int v)
     {
-        visited[u] = true;
+        marked[v] = true;
 
-        for (Edge e : g.adj(u)) 
+        for (Edge e : g.adj(v))
         {
-            int v = e.other(u);
-
-            if (e.getWeight() < distTo[v])
+            int u = e.other(v);
+            if (marked[u]) continue;
+            if (e.getWeight() < distTo[u])
             {
-                distTo[v] = e.getWeight();
-                edgeTo[v] = e;
+                distTo[u] = e.getWeight();
+                edgeTo[u] = e;
 
-                if (pq.contains(v))
-                    pq.decreaseKey(v, distTo[v]);
+                if (pq.contains(u))
+                    pq.decreaseKey(u, distTo[u]);
                 else
-                    pq.insert(v, distTo[v]);
+                    pq.insert(u, distTo[u]);
             }
         }
     }
@@ -64,13 +63,12 @@ public class PrimTree
     public Iterable<Edge> edges()
     {
         Queue<Edge> mst = new Queue<Edge>();
-        for (int i = 0; i < edgeTo.length; i++) 
-        {
+
+        for (int i = 0; i < edgeTo.length; i++) {
             Edge e = edgeTo[i];
 
             if (e != null)
                 mst.enQueue(e);
-            
         }
         return mst;
     }
@@ -94,10 +92,5 @@ public class PrimTree
             sb.append(e + "\n");
 
         return sb.toString();
-    }
-
-    private char toChar(int item)
-    {
-        return (char) (item + 64);
     }
 }

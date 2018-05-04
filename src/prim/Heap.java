@@ -1,6 +1,6 @@
 package prim;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 // Minimum Heap
@@ -9,18 +9,18 @@ public class Heap<E extends Comparable<E>>
     private int n;
     private int[] pq;
     private int[] hPos;
-    private ArrayList<E> keys;
+    private E[] keys;
 
-    public Heap(int maxN)
+    public Heap(int size)
     {
         n = 0;
-        pq = new int[maxN + 1];
-        hPos = new int[maxN + 1];
-        keys = new ArrayList<E>(maxN + 1);
+        pq = new int[size + 1];
+        hPos = new int[size + 1];
+        keys = (E[]) new Comparable[size + 1];
 
-
-        for (int i = 0; i <= maxN; i++)
+        for (int i = 0; i < size; i++) {
             hPos[i] = -1;
+        }
     }
 
     public void insert(int i, E key)
@@ -28,7 +28,7 @@ public class Heap<E extends Comparable<E>>
         n++;
         hPos[i] = n;
         pq[n] = i;
-        keys.add(key);
+        keys[i] = key;
 
         siftUp(n);
     }
@@ -45,7 +45,7 @@ public class Heap<E extends Comparable<E>>
         siftDown(1);
 
         hPos[min] = -1;
-        keys.set(min, null);
+        keys[min] = null;
         pq[n + 1] = -1;
 
         return min;
@@ -63,16 +63,18 @@ public class Heap<E extends Comparable<E>>
 
     public void decreaseKey(int i, E key)
     {
-        keys.add(key);
+        keys[i] = key;
         siftUp(hPos[i]);
     }
-   
 
+    public Iterator<Integer> iterator()
+    {
+        return new HeapIterator(n);
+    }
    
-
     private void siftUp(int key)
     {
-        while (key > 0 && greater(key / 2, key))
+        while (key > 1 && greater(key / 2, key))
         {
             swap(key, key / 2);
             key = key / 2;
@@ -97,7 +99,7 @@ public class Heap<E extends Comparable<E>>
 
     private boolean greater(int i, int j)
     {
-        return pq[i] > pq[j];
+        return keys[pq[i]].compareTo(keys[pq[j]]) > 0;
     }
 
     private void swap(int i, int j)
@@ -105,8 +107,12 @@ public class Heap<E extends Comparable<E>>
         int temp = pq[i];
         pq[i] = pq[j];
         pq[j] = temp;
-        // E item = pq.get(i);
-        // pq.set(i, pq.get(j));
-        // pq.set(j, item);
+        hPos[pq[i]] = i;
+        hPos[pq[j]] = j;
+    }
+
+    public String toString()
+    {
+        return this.toString();
     }
 }
