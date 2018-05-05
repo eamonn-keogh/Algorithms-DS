@@ -118,7 +118,7 @@ class Heap
         return v;
     }
 
-}
+} // end heap class
 
 class Graph 
 {
@@ -155,7 +155,7 @@ class Graph
         String splits = " +";  // multiple whitespace as delimiter
 		String line = reader.readLine();        
         String[] parts = line.split(splits);
-        System.out.println("Parts[] = " + parts[0] + " " + parts[1]);
+        System.out.println("Vertices: " + parts[0] + " Edges: " + parts[1] + "\n");
         
         V = Integer.parseInt(parts[0]);
         E = Integer.parseInt(parts[1]);
@@ -170,7 +170,6 @@ class Graph
             adj[v] = z;               
         
        // read the edges
-        System.out.println("Reading edges from text file");
         for(e = 1; e <= E; ++e)
         {
             line = reader.readLine();
@@ -178,9 +177,7 @@ class Graph
             u = Integer.parseInt(parts[0]);
             v = Integer.parseInt(parts[1]); 
             wgt = Integer.parseInt(parts[2]);
-            
-            System.out.println("Edge " + toChar(u) + "--(" + wgt + ")--" + toChar(v));    
-            
+                        
             // write code to put edge into adjacency matrix
 			// Putting edge into adjacency matrix into the linked list.
             t = new Node();
@@ -210,12 +207,15 @@ class Graph
         int v;
         Node n;
         
-        for(v=1; v<=V; ++v){
-            System.out.print("\nadj[" + toChar(v) + "] ->" );
+        System.out.println("Adjacency List: ");
+        for(v=1; v<=V; ++v)
+        {
+            System.out.print(toChar(v) + " -> " );
             for(n = adj[v]; n != z; n = n.next) 
-                System.out.print(" |" + toChar(n.vert) + " | " + n.wgt + "| ->");    
+                System.out.print("[" + toChar(n.vert) + ", " + n.wgt + "] ");   
+            System.out.println(""); 
         }
-        System.out.println("");
+        
     }
 
 
@@ -236,11 +236,11 @@ class Graph
         for(v = 0; v <= V; v++) 
         {
 
-            dist[v] = Integer.MAX_VALUE; // Set to infinity.
+            dist[v] = Integer.MAX_VALUE; // dist is infinity.
 
-            parent[v] = 0; // Treat 0 as a special null vertex.
+            parent[v] = 0; // null vertex.
 
-            hPos[v] = 0; // Indicates that it's not on the heap.
+            hPos[v] = 0; // not on heap
         }
 
         // Creating a new empty priority heap.
@@ -288,21 +288,21 @@ class Graph
                     }
                 }
             }
+        }
 
         System.out.print("\n\nWeight of MST = " + wgt_sum + "\n");
         
         mst = parent; 
-    }                     		
-}
+    }                    		
     
     public void showMST()
     {
-            System.out.print("\n\nMinimum Spanning tree parent array is:\n");
+            System.out.print("\n\nMinimum Spanning tree is:\n");
             for(int v = 1; v <= V; ++v)
                 System.out.println(toChar(v) + " -> " + toChar(mst[v]));
             System.out.println("");
     }
-}
+} // end graph class
 
 public class PrimLists 
 {
