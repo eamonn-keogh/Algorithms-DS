@@ -100,18 +100,5 @@ public class Heap<E extends Comparable<E>>
     public String toString()
     {
         return this.toString();
-        // StringBuilder sb = new StringBuilder();
-        
-        // sb.append("[ ");
-        // for (int i = 0; i < pq.size(); i++)
-        // { 
-        //     if (i == pq.size() - 1)
-        //         sb.append(pq.get(i));
-        //     else
-        //         sb.append(pq.get(i) + ", ");
-        // }
-        // sb.append(" ]");
-        
-        // return sb.toString();
     }
 }
